@@ -33,8 +33,6 @@ const createItem = (req, res) => {
 };
 
 const deleteItem = (req, res) => {
-  console.log("deleteItem controller");
-
   const { itemId } = req.params;
   ClothingItem.findByIdAndDelete(itemId)
     .orFail()
@@ -52,7 +50,6 @@ const deleteItem = (req, res) => {
 };
 
 const likeItem = (req, res) => {
-  console.log("likeItem controller");
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
     { $addToSet: { likes: req.user._id } },
@@ -73,7 +70,6 @@ const likeItem = (req, res) => {
 };
 
 const dislikeItem = (req, res) => {
-  console.log("dislikeItem controller");
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
     { $pull: { likes: req.user._id } },
