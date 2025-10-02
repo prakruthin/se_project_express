@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
+const cors = require("cors");
 const mainRouter = require("./routes/index");
 
 const app = express();
@@ -15,15 +16,9 @@ mongoose
   .catch(console.error);
 
 app.use(helmet());
-
 app.use(express.json());
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: "68c85a275ee1e9e9c6c68c6b",
-  };
-  next();
-});
+app.use(cors());
 
 app.use("/", mainRouter);
 
