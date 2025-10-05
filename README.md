@@ -1,7 +1,7 @@
 # WTWR (What to Wear?) — Backend
 
-This project is the backend service for the **WTWR (What to Wear?)** application.  
-It provides a RESTful API built with **Node.js**, **Express**, and **MongoDB**, enabling users to manage clothing items and interact with their wardrobe data.
+This project is the backend service for the **WTWR (What to Wear?)** web application.  
+It provides a secure, RESTful API built with **Node.js**, **Express**, and **MongoDB**, allowing users to manage their clothing items, authentication, and wardrobe preferences.
 
 ---
 
@@ -9,33 +9,52 @@ It provides a RESTful API built with **Node.js**, **Express**, and **MongoDB**, 
 
 ### User Management
 
-- Create a user with `name` and `avatar`.
-- Fetch all users or a single user by ID.
-- Error handling for invalid IDs or non-existent users.
+- **POST /signup** — Register a new user (name, avatar, email, password).
+- **POST /signin** — Login with email and password to receive a JWT token.
+- **GET /users/me** — Get details of the currently authenticated user.
+- **PATCH /users/me** — Update your name and avatar.
 
 ### Clothing Items
 
-- **GET /items** — fetch all clothing items.
-- **POST /items** — create a new clothing item (`name`, `weather`, `imageUrl`, `owner`).
-- **DELETE /items/:itemId** — delete a clothing item by ID.
-- **PUT /items/:itemId/likes** — like a clothing item.
-- **DELETE /items/:itemId/likes** — dislike a clothing item.
+- **GET /items** — Fetch all clothing items (public).
+- **POST /items** — Add a new clothing item (authenticated users only).
+- **DELETE /items/:itemId** — Delete your own clothing item only (authorization enforced).
+- **PUT /items/:itemId/likes** — Like an item.
+- **DELETE /items/:itemId/likes** — Remove like from an item.
 
-### Error Handling
+---
 
-- **400** — invalid data (validation errors, invalid ID format).
-- **404** — resource not found (invalid route, missing user/item).
-- **500** — internal server error (default).
+## Authentication & Authorization
+
+- JWT-based authentication using `Bearer <token>` in the `Authorization` header.
+- Protected routes use custom `auth` middleware.
+- Users can only modify or delete their own items (checked via item ownership).
+
+---
+
+## ⚙️ Error Handling
+
+| Code | Meaning               | Description                             |
+| ---- | --------------------- | --------------------------------------- |
+| 400  | Bad Request           | Invalid data or malformed ID            |
+| 401  | Unauthorized          | Missing or invalid authentication token |
+| 403  | Forbidden             | Attempt to delete another user's item   |
+| 404  | Not Found             | Resource does not exist                 |
+| 409  | Conflict              | Email already exists                    |
+| 500  | Internal Server Error | Server-side error                       |
 
 ---
 
 ## Tech Stack
 
-- [Node.js](https://nodejs.org/) — JavaScript runtime
-- [Express.js](https://expressjs.com/) — web framework
-- [MongoDB](https://www.mongodb.com/) + [Mongoose](https://mongoosejs.com/) — database & ODM
-- [ESLint](https://eslint.org/) + Airbnb config — code quality
-- [Validator.js](https://github.com/validatorjs/validator.js) — input validation
+- **Node.js** — Runtime environment
+- **Express.js** — Web framework
+- **MongoDB + Mongoose** — Database and ODM
+- **JWT (jsonwebtoken)** — Authentication
+- **bcryptjs** — Password hashing
+- **Validator.js** — Input validation
+- **Helmet** — Security
+- **ESLint (Airbnb)** — Code linting
 
 ---
 
@@ -69,39 +88,28 @@ It provides a RESTful API built with **Node.js**, **Express**, and **MongoDB**, 
     npm run dev
     ```
 
-## API Endpoints
-
-### Users
-
----
-
-GET /users - Get all users
-
-GET /users/:id - Get user by ID
-
-POST /users - Create a new user
-
-### Clothing Items
-
----
-
-GET /items - Get all items
-
-POST /items - Create a new item
-
-DELETE /items/:itemId - Delete an item
-
-PUT /items/:itemId/likes - Like an item
-
-DELETE /items/:itemId/likes - Dislike an item
-
 ## Testing with Postman
 
 You can test the routes using Postman:
 
 Base URL: http://localhost:3001
 
-Example: GET http://localhost:3001/items
+Example:
+
+```
+ GET http://localhost:3001/items
+```
+
+```
+POST /items
+Headers: Authorization: Bearer <token>
+Body:
+{
+"name": "Blue Jacket",
+"weather": "cold",
+"imageUrl": "https://example.com/jacket.png"
+}
+```
 
 ## Screenshots
 
@@ -112,10 +120,6 @@ Example: GET http://localhost:3001/items
 ![](./screenshots/createUser.png)
 
 ## Future Improvements
-
-- User authentication (JWT-based).
-
-- Role-based permissions.
 
 - Cloud storage for images.
 

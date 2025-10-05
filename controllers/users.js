@@ -8,6 +8,7 @@ const {
   NOT_FOUND,
   CONFLICT,
   INTERNAL_SERVER_ERROR,
+  UNAUTHORIZED,
 } = require("../utils/errors");
 
 const getUsers = (req, res) => {
@@ -79,6 +80,11 @@ const getUser = (req, res) => {
 
 const login = (req, res) => {
   const { email, password } = req.body;
+  if (!email || !password) {
+    return res
+      .status(BAD_REQUEST)
+      .send({ message: "Invalid email or password" });
+  }
   return User.findUserByCredentials(email, password)
     .then((user) => {
       res.send({
@@ -92,7 +98,7 @@ const login = (req, res) => {
         err.message.includes("Illegal arguments")
       ) {
         return res
-          .status(BAD_REQUEST)
+          .status(UNAUTHORIZED)
           .send({ message: "Invalid email or password" });
       }
       return res
