@@ -8,12 +8,22 @@ const app = express();
 
 const { PORT = 3001 } = process.env;
 
+// mongoose
+//   .connect("mongodb://127.0.0.1:27017/wtwr_db")
+//   .then(() => {
+//     console.log("Connected to DB");
+//   })
+//   .catch(console.error);
+
+const MONGO_URL = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/wtwr_db";
+
 mongoose
-  .connect("mongodb://127.0.0.1:27017/wtwr_db")
-  .then(() => {
-    console.log("Connected to DB");
+  .connect(MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
   })
-  .catch(console.error);
+  .then(() => console.log("Connected to DB"))
+  .catch((err) => console.error("DB connection error:", err));
 
 app.use(helmet());
 app.use(express.json());
