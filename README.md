@@ -3,7 +3,27 @@
 This project is the backend service for the **WTWR (What to Wear?)** web application.  
 It provides a secure, RESTful API built with **Node.js**, **Express**, and **MongoDB**, allowing users to manage their clothing items, authentication, and wardrobe preferences.
 
----
+
+## Live Demo
+
+Check it out here:  
+https://gcp-wtwr.jumpingcrab.com/
+
+
+
+## Frontend Repository
+
+The frontend for this project is available here:  
+[WTWR Frontend](https://github.com/prakruthin/se_project_react)
+
+
+
+ ## Project Pitch Video
+ 
+ Check out [this video](https://drive.google.com/file/d/14ua7wv3oLTBbb7N0GRfe72xig9V4iY-E/view?usp=drive_link), where I describe my 
+ project and some challenges I faced while building it.
+
+
 
 ## Features
 

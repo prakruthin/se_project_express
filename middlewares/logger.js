@@ -17,14 +17,21 @@ const requestLogger = expressWinston.logger({
     new winston.transports.File({
       filename: "request.log",
       format: winston.format.json(),
-      meta: true,
+
     }),
   ],
 });
 
 const errorLogger = expressWinston.errorLogger({
-  transports: [new winston.transports.File({ filename: "error.log" })],
-  format: winston.format.json(),
+  transports: [
+    new winston.transports.Console({
+      format: messageFormat,
+    }),
+    new winston.transports.File({
+      filename: "error.log",
+      format: winston.format.json(),
+    }),
+  ],
 });
 
 module.exports = {
