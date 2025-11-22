@@ -9,16 +9,6 @@ const ConflictError = require("../errors/conflict-error");
 // const ForbiddenError = require("../errors/forbidden-error");
 const UnauthorizedError = require("../errors/unauthorized-error");
 
-const getUsers = (req, res, next) => {
-  User.find({})
-    .then((users) => {
-      res.status(200).send({ data: users });
-    })
-    .catch((err) => {
-      next(err);
-    });
-};
-
 const createUser = (req, res, next) => {
   const { name, avatar, email } = req.body;
   bcrypt
@@ -37,24 +27,6 @@ const createUser = (req, res, next) => {
         return next(new ConflictError("Email already exists"));
       }
       if (err.name === "ValidationError") {
-        return next(new BadRequestError("Invalid data provided"));
-      }
-      return next(err);
-    });
-};
-
-const getUser = (req, res, next) => {
-  const { userId } = req.params;
-  User.findById(userId)
-    .orFail()
-    .then((user) => {
-      res.status(200).send({ data: user });
-    })
-    .catch((err) => {
-      if (err.name === "DocumentNotFoundError") {
-        return next(new NotFoundError("Requested resource not found"));
-      }
-      if (err.name === "CastError") {
         return next(new BadRequestError("Invalid data provided"));
       }
       return next(err);
@@ -90,7 +62,10 @@ const getCurrentUser = (req, res, next) => {
       res.status(200).send({ data: user });
     })
     .catch((err) => {
-      next(err);
+      if (err.name === "DocumentNotFoundError") {
+        return next(new NotFoundError("Requested resource not found"));
+      }
+      return next(err);
     });
 };
 
@@ -117,8 +92,6 @@ const modifyUser = (req, res, next) => {
 };
 
 module.exports = {
-  getUsers,
-  getUser,
   createUser,
   login,
   getCurrentUser,
